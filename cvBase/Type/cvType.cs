@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cvBase.Tools
-{
+
     namespace cvBase.Type
     {
         /// <summary>
@@ -59,4 +58,4 @@ namespace cvBase.Tools
         }
 
     }
-}
+
