@@ -198,6 +198,11 @@ namespace cvBase.DS
         public Node<T> GetNode(int index)
         {
             Node<T> p = Head;
+            //表异常检测
+            if (index>Length)
+            {
+                return null;
+            }
             for (int i = 0; i < index; i++)
             {
                 p = p.Next;
@@ -255,16 +260,105 @@ namespace cvBase.DS
             return result.ToArray();
         }
         /// <summary>
-        ///删除结点函数
+        ///删除多结点函数
         /// </summary>
-        /// <param name="data">待删数据</param>
-        //public void Delete(int[] indexes) 
-        //{
-        //    Node<T> p = Head;
-            
-        //}
-        
-    
+        /// <param name="indexes">待删索引集</param>
+        public void Delete(int[] indexes)
+        {
+            Node<T> p = Head;
+            List<int> indList = indexes.ToList();
+            indList.Sort();
+            int[] indexes_sorted = indList.ToArray();
+            int i = 0, j = 0;
+            while (p.Next!=null)
+            {
+                p = p.Next;
+                i++;
+                if (j<indexes_sorted.Length&&i==indexes_sorted[j])
+                {
+                    p.Prev.Next = p.Next;
+                    if (p.Next!=null)
+                    {
+                        p.Next.Prev = p.Prev;
+                    }
+                    j++;
+                    Length--;
+                }
+            }
+        }
+        /// <summary>
+        /// 删除单节点函数
+        /// </summary>
+        /// <param name="index">待删索引</param>
+        public void Delete(int index)
+        {
+            int[] indexes = { index };
+            Delete(indexes);
+        }
+        /// <summary>
+        /// 删除指定数据的所有结点
+        /// </summary>
+        /// <param name="data">待删匹配数据</param>
+        public void Delete(T data)
+        {
+            Delete(GetIndexes(data));
+        }
+        /// <summary>
+        /// 区间索引批量删除函数
+        /// <para>保证O(n)时间复杂度与足够低的空间复杂度下的实现</para>
+        /// </summary>
+        /// <param name="st">起点位</param>
+        /// <param name="dst">终点位</param>
+        public void Delete(int st, int dst)
+        {
+            if (st <= dst && st >= 1 && dst <= Length)
+            {
+                Node<T> p = Head;
+                Node<T> front;
+                Node<T> rear;
+                for (int i = 0; i < st; i++)
+                {
+                    p = p.Next;
+                }
+                front = p.Prev;
+                for (int i = st; i < dst; i++)
+                {
+                    p = p.Next;
+                }
+                rear = p;
+                front.Next = rear.Next;
+                if (rear.Next!=null)
+                {
+                    rear.Next.Prev = front;
+                }
+                Length = Length - (dst - st + 1);
+            }
+        }
+       /// <summary>
+       /// 清空表
+       /// </summary>
+        public void Clear()
+        {
+            if (Length>0)
+            {
+                Delete(1, Length);
+            }
+        }
+       /// <summary>
+       /// 列出所有表数据&转化为数组
+       /// </summary>
+       /// <returns>表数据数组</returns>
+        public T[] ToArray()
+        {
+            List<T> list = new List<T>();
+            Node<T> p = Head;
+            while (p.Next!=null)
+            {
+                p = p.Next;
+                list.Add(p.Data);
+            }
+            return list.ToArray();
+        }
     }
 
 

@@ -5,9 +5,9 @@ namespace cvTest
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            LinkList<string> linkList = new LinkList<string>();
+            LinkList<string> linkList = new();
             for (int i = 1; i <= 10; i++)
             {
                 linkList.Add(i+"", LinkList<string>.AddType.backward);
@@ -18,14 +18,28 @@ namespace cvTest
             {
                 linkList.Add("117", LinkList<string>.AddType.backward);
             }
-            Console.WriteLine(linkList.Length);
-            for (int j = 1; j <= linkList.Length; j++)
-            {
-                Console.WriteLine(j+"\t"+linkList.GetData(j));
-            }
+
+            //输出流
+            ListAll<string>(linkList);
             foreach (var index in linkList.GetIndexes("117"))
             {
                 Console.Write(index + "\t");
+            }
+            Console.Write("\n");
+            linkList.Delete("117");
+            linkList.Delete(1,5);
+            ListAll<string>(linkList);
+            linkList.Clear();
+            ListAll<string>(linkList);
+        }
+
+        public static void ListAll<T>(LinkList<T> linkList)
+        {
+            Console.WriteLine(linkList.Length);
+            T[] list = linkList.ToArray();
+            for (int i = 0; i < list.Length; i++)
+            {
+                Console.WriteLine(i+1 + "\t" + list[i]);
             }
         }
     }
