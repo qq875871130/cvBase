@@ -16,8 +16,11 @@ namespace cvTest.IO
         {
             try
             {
+                //按路径读取XML
                 Xml.Load(path);
+                //以第一个结点作根菜单项目
                 Root = new CmdItem(Xml.SelectSingleNode("commands"));
+                //从根项目启动事件加载器
                 CmdEventLoader CmdEventLoader = new CmdEventLoader(Root);
             }
             catch (Exception e)
@@ -29,6 +32,7 @@ namespace cvTest.IO
         
         public void Start()
         {
+            //展开根菜单
             EventCenter.invoke(Root.Type, Root.Key);
         }
         

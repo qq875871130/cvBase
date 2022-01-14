@@ -8,77 +8,28 @@ using cvTest.Event;
 
 namespace cvTest.Event
 {
+    //委托定义项
     public delegate void Method();
     public delegate void Method<T>(T p1);
-
-    public class EventCenter
-    {
-        public static CmdEventLoader.MenuEventSystem InstanceMenu = null;
-        public static CmdEventLoader.SystemEventSystem InstanceSystem = null;
-
-        public enum SystemType
-        {
-            menu,
-            system,
-            item
-        }
-
-        private static Dictionary<SystemType, EventSystem> SystemPool = new();
-
-        public static void Add(SystemType type, EventSystem system)
-        {
-            if (!SystemPool.ContainsKey(type))
-            {
-                SystemPool[type] = system;
-            }
-        }
-        public static void Remove(SystemType type)
-        {
-            if (SystemPool.ContainsKey(type))
-            {
-                SystemPool.Remove(type);
-            }
-        }
-        public static bool isInPool(SystemType type)
-        {
-            if (SystemPool.ContainsKey(type))
-            {
-                if (SystemPool[type] != null)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        public static EventSystem GetSubSystem(SystemType type)
-        {
-            if (isInPool(type))
-            {
-                return SystemPool[type];
-            }
-            return null;
-        }
-        public static void invoke(SystemType type,string key)
-        {
-            if (GetSubSystem(type)!=null)
-            {
-                GetSubSystem(type).invoke(key);
-            }
-        }
-    }
-
+    /// <summary>
+    /// 消息事件系统
+    /// <para>存放以键索引的委托链集合，以实现简单的消息机制</para>
+    /// </summary>
     public class EventSystem
     {
+        /// <summary>
+        /// 委托事件池
+        /// </summary>
         private Dictionary<string, Delegate> EventPool;
-        public enum MethodType
-        {
-            param_none,
-            param_1
-        }
         public EventSystem()
         {
             EventPool = new();
         }
+        /// <summary>
+        /// 判别委托是否在委托池
+        /// </summary>
+        /// <param name="key">键</param>
+        /// <returns></returns>
         public bool isInPool(string key)
         {
             if (EventPool.ContainsKey(key))
@@ -90,7 +41,11 @@ namespace cvTest.Event
             }
             return false;
         }
-        #region 单参数
+        /// <summary>
+        /// 注册消息
+        /// </summary>
+        /// <param name="key">键</param>
+        /// <param name="e">委托链结点</param>
         public void Add(string key, Method<string> e)
         {
             switch (EventPool.ContainsKey(key))
@@ -103,6 +58,11 @@ namespace cvTest.Event
                     break;
             }
         }
+        /// <summary>
+        /// 注销消息
+        /// </summary>
+        /// <param name="key">键</param>
+        /// <param name="Event">注销委托链结点</param>
         public void Remove(string key, Method<string> Event)
         {
             if (EventPool.ContainsKey(key))
@@ -114,16 +74,18 @@ namespace cvTest.Event
                 }
             }
         }
+        /// <summary>
+        /// 响应消息
+        /// </summary>
+        /// <param name="key">键</param>
         public void invoke(string key)
         {
             if (isInPool(key))
             {
+                //执行委托链
                 Method<string> e = EventPool[key] as Method<string>;
                 e(key);
             }
         }
-        #endregion
-
-
     }
 }
