@@ -9,8 +9,7 @@ using cvTest.Event;
 namespace cvTest.Event
 {
     //委托定义项
-    public delegate void Method();
-    public delegate void Method<T>(T p1);
+    public delegate void Method(CmdItem sender);
     /// <summary>
     /// 消息事件系统
     /// <para>存放以键索引的委托链集合，以实现简单的消息机制</para>
@@ -46,12 +45,12 @@ namespace cvTest.Event
         /// </summary>
         /// <param name="key">键</param>
         /// <param name="e">委托链结点</param>
-        public void Add(string key, Method<string> e)
+        public void Add(string key, Method e)
         {
             switch (EventPool.ContainsKey(key))
             {
                 case true:
-                    EventPool[key] = (Method<string>)EventPool[key] + e;
+                    EventPool[key] = (Method)EventPool[key] + e;
                     break;
                 case false:
                     EventPool.Add(key, e);
@@ -63,11 +62,11 @@ namespace cvTest.Event
         /// </summary>
         /// <param name="key">键</param>
         /// <param name="Event">注销委托链结点</param>
-        public void Remove(string key, Method<string> Event)
+        public void Remove(string key, Method Event)
         {
             if (EventPool.ContainsKey(key))
             {
-                EventPool[key] = (Method<string>)EventPool[key] - Event;
+                EventPool[key] = (Method)EventPool[key] - Event;
                 if (EventPool[key] == null)
                 {
                     EventPool.Remove(key);
@@ -78,13 +77,14 @@ namespace cvTest.Event
         /// 响应消息
         /// </summary>
         /// <param name="key">键</param>
-        public void invoke(string key)
+        public void invoke(string key,EventCenter.SystemType type)
         {
             if (isInPool(key))
             {
                 //执行委托链
-                Method<string> e = EventPool[key] as Method<string>;
-                e(key);
+                Method e = EventPool[key] as Method;
+                CmdItem sender = EventCenter.GetRoot().GetItem(key, type);
+                e(sender);
             }
         }
     }

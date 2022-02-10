@@ -13,6 +13,7 @@ namespace cvTest.IO
     /// </summary>
     public class CmdItem
     {
+        public static CmdItem Null = new CmdItem("null", "null", EventCenter.SystemType.system);
         /// <summary>
         /// 项名
         /// </summary>
@@ -55,12 +56,13 @@ namespace cvTest.IO
                     case "commands":
                         Type = EventCenter.SystemType.menu;
                         break;
-                    case "item":
-                        Type = EventCenter.SystemType.item;
-                        break;
                     default:
                         Type = EventCenter.SystemType.system;
                         break;
+                }
+                if (Enum.TryParse(element.Name, out EventCenter.SystemType type) == true)
+                {
+                    Type = type;
                 }
             }
             //添加子节点
@@ -105,6 +107,13 @@ namespace cvTest.IO
                 CmdItems.Add(cmdItem);
             }
         }
+        public void ClearCmd()
+        {
+            if (CmdItems!=null)
+            {
+                CmdItems.Clear();
+            }
+        }
         /// <summary>
         /// 由键与事件种类获取项目
         /// </summary>
@@ -117,11 +126,14 @@ namespace cvTest.IO
             {
                 return this;
             }
-            foreach (CmdItem item in CmdItems)
+            if (CmdItems!=null)
             {
-                if (item.GetItem(key, systemType) != null)
+                foreach (CmdItem item in CmdItems)
                 {
-                    return item.GetItem(key, systemType);
+                    if (item.GetItem(key, systemType) != null)
+                    {
+                        return item.GetItem(key, systemType);
+                    }
                 }
             }
             return null;

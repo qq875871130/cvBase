@@ -2,13 +2,13 @@
 <commands name="主菜单" key="main">
   <commands name="线性表" key="list">
     <commands name="顺序表" key="list_order">
-      <item name="顺序表" key="list_order"></item>
-      <item name="顺序循环表" key="list_order_circular"></item>
+      <list name="顺序表" key="list_order"></list>
+      <list name="顺序循环表" key="list_order_circular"></list>
     </commands>
     <commands name="链表" key="list_linked">
-      <item name="单链表" key="list_linked_single"></item>
-      <item name="双向链表" key="list_linked_double"></item>
-      <item name="循环链表" key="list_linked_circular"></item>
+      <list name="单链表" key="list_linked_single"></list>
+      <list name="双向链表" key="list_linked_double"></list>
+      <list name="循环链表" key="list_linked_circular"></list>
     </commands>
   </commands>
   <commands name="栈" key="stack"></commands>

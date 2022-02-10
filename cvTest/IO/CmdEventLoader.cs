@@ -13,28 +13,17 @@ namespace cvTest.IO
     /// </summary>
     public class CmdEventLoader
     {
-        public CmdEventLoader(CmdItem root)
+        public CmdEventLoader()
         {
             //注册事件系统，连接至控制中心
-            EventCenter.InstanceMenu = MenuEventSystem.Instance(root);
-            EventCenter.InstanceSystem = SystemEventSystem.Instance(root);
+            new MenuEventSystem();
+            new SystemEventSystem();
         }
         /// <summary>
         /// 菜单消息系统
         /// </summary>
         public class MenuEventSystem : BEventSystem
         {
-            #region 单例模式
-            private static MenuEventSystem instance = null;
-            public static MenuEventSystem Instance(CmdItem root)
-            {
-                if (instance == null)
-                {
-                    instance = new MenuEventSystem(root);
-                }
-                return instance;
-            }
-            #endregion
             /// <summary>
             /// 系统附加控制菜单项目
             /// </summary>
@@ -62,12 +51,12 @@ namespace cvTest.IO
             /// <summary>
             /// 当前根项目
             /// </summary>
-            public CmdItem RootCurrent { get; internal set; }
+            public static CmdItem RootCurrent { get; internal set; }
             /// <summary>
             /// 当前菜单项集
             /// </summary>
             public static List<CmdItem> MenuCurrent { get; internal set; } = new();
-            private MenuEventSystem(CmdItem root) : base(EventCenter.SystemType.menu, root)
+            public MenuEventSystem() : base(EventCenter.SystemType.menu, EventCenter.GetRoot())
             {
                 Register();
             }
@@ -80,10 +69,10 @@ namespace cvTest.IO
                 //注册所有列菜单事件
                 foreach (string key in base.Root.GetKeys(SystemType))
                 {
-                    base.EventSystem.Add(key, new Method<string>(MenuPrinter));
-                    base.EventSystem.Add(key, new Method<string>(ReadCmd));
+                    base.EventSystem.Add(key, new Method(MenuPrinter));
+                    base.EventSystem.Add(key, new Method(ReadCmd));
                 }
-                base.EventSystem.Add(MenuExtra.Key.back.ToString(), new Method<string>(Back));
+                base.EventSystem.Add(MenuExtra.Key.back.ToString(), new Method(Back));
                 base.Register();
             }
             #region 菜单消息系统所有委托方法
@@ -91,22 +80,22 @@ namespace cvTest.IO
             /// 菜单控制列表生成函数
             /// <para>根据附加菜单集与现有测试集生成总控制列表，并更新当前菜单项集</para>
             /// </summary>
-            /// <param name="root">用于生成列表的项目载点</param>
-            public void CmdGenerator(CmdItem root)
+            /// <param name="sender">用于生成列表的项目载点</param>
+            public static void CmdGenerator(CmdItem sender)
             {
                 MenuCurrent.Clear();
                 foreach (var item in MenuExtra.Dictionary)
                 {
-                    if (root.Father == null && item.Key == MenuExtra.Key.back.ToString())
+                    if (sender.Father == null && item.Key == MenuExtra.Key.back.ToString())
                     {
                         continue;
                     }
-                    item.Value.Father = root;
+                    item.Value.Father = sender;
                     MenuCurrent.Add(item.Value);
                 };
-                if (root.CmdItems != null)
+                if (sender.CmdItems != null)
                 {
-                    foreach (CmdItem item in root.CmdItems)
+                    foreach (CmdItem item in sender.CmdItems)
                     {
                         MenuCurrent.Add(item);
                     }
@@ -117,11 +106,11 @@ namespace cvTest.IO
             /// <para>浏览菜单并输出项目至控制台，并更新当前根项目</para>
             /// </summary>
             /// <param name="key">菜单项目键值</param>
-            public void MenuPrinter(string key)
+            public static void MenuPrinter(CmdItem sender)
             {
                 try
                 {
-                    RootCurrent = base.Root.GetItem(key, base.SystemType);
+                    RootCurrent = sender;
                     if (RootCurrent != null)
                     {
                         //打印标题
@@ -144,10 +133,18 @@ namespace cvTest.IO
                 }
             }
             /// <summary>
+            /// 菜单刷新函数
+            /// </summary>
+            /// <param name="sender">空发送者</param>
+            public static void RefreshMenu(CmdItem sender)
+            {
+                MenuPrinter(RootCurrent);
+            }
+            /// <summary>
             /// 菜单返回函数
             /// </summary>
             /// <param name="key">空，应付委托格式</param>
-            public void Back(string key)
+            public static void Back(CmdItem item)
             {
                 EventCenter.invoke(RootCurrent.Father.Type, RootCurrent.Father.Key);
             }
@@ -155,7 +152,7 @@ namespace cvTest.IO
             /// 用户输入读取函数
             /// </summary>
             /// <param name="key">应付委托格式</param>
-            public void ReadCmd(string key)
+            public static void ReadCmd(CmdItem sender)
             {
                 try
                 {
@@ -173,7 +170,7 @@ namespace cvTest.IO
                 {
                     //输入格式为非数字时，提示错误并要求重新输入
                     CmdLine.Write("输入有误，请重试", CmdLine.WriteState.no_clear);
-                    ReadCmd(key);
+                    ReadCmd(sender);
                     throw;
                 }
             }
@@ -184,30 +181,19 @@ namespace cvTest.IO
         /// </summary>
         public class SystemEventSystem : BEventSystem
         {
-            #region 单例模式
-            private static SystemEventSystem instance = null;
-            public static SystemEventSystem Instance(CmdItem root)
-            {
-                if (instance == null)
-                {
-                    instance = new SystemEventSystem(root);
-                }
-                return instance;
-            }
-            #endregion
-            private SystemEventSystem(CmdItem root) : base(EventCenter.SystemType.system, root)
+            public SystemEventSystem() : base(EventCenter.SystemType.system, EventCenter.GetRoot())
             {
                 Register();
             }
             protected override void Register()
             {
-                base.EventSystem.Add(MenuEventSystem.MenuExtra.Key.exit.ToString(), new Method<string>(Exit));
-                base.EventSystem.Add(MenuEventSystem.MenuExtra.Key.home.ToString(), new Method<string>(Home));
+                base.EventSystem.Add(MenuEventSystem.MenuExtra.Key.exit.ToString(), new Method(Exit));
+                base.EventSystem.Add(MenuEventSystem.MenuExtra.Key.home.ToString(), new Method(Home));
                 base.Register();
             }
             #region 系统消息委托
             //退出控制台
-            public void Exit(string key)
+            public void Exit(CmdItem sender)
             {
                 CmdLine.Write("确定要退出吗？(Y/N)");
                 if (CmdLine.GetInput())
@@ -217,16 +203,15 @@ namespace cvTest.IO
                 else
                 {
                     //返回主页
-                    Home("");
+                    Home(sender);
                 }
             }
             //返回主菜单
-            public void Home(string key)
+            public void Home(CmdItem sender)
             {
                 EventCenter.invoke(EventCenter.SystemType.menu, base.Root.Key);
             }
             #endregion
         }
-
     }
 }

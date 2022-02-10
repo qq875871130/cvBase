@@ -15,9 +15,7 @@ namespace cvTest.Event
     /// </summary>
     public class EventCenter
     {
-        //通过Loader初始化生成的系统单例，用于系统间数据通信
-        public static CmdEventLoader.MenuEventSystem InstanceMenu = null;
-        public static CmdEventLoader.SystemEventSystem InstanceSystem = null;
+        public static CmdItem Root { get; internal set; } = null;
         /// <summary>
         /// 消息系统分类枚举
         /// </summary>
@@ -25,12 +23,28 @@ namespace cvTest.Event
         {
             menu,
             system,
-            item
+            list
         }
         /// <summary>
         /// 消息系统池
         /// </summary>
-        private static Dictionary<SystemType, EventSystem> SystemPool = new();
+        public  readonly static Dictionary<SystemType, EventSystem> SystemPool = new();
+        /// <summary>
+        /// 设置全局根结点
+        /// </summary>
+        /// <param name="root">根结点</param>
+        public static void SetRoot(CmdItem root)
+        {
+            Root = root;
+        }
+        public static CmdItem GetRoot()
+        {
+            if (Root!=null)
+            {
+                return Root;
+            }
+            return CmdItem.Null;
+        }
         /// <summary>
         /// 消息系统在控制中心注册
         /// </summary>
@@ -38,7 +52,7 @@ namespace cvTest.Event
         /// <param name="system">待注册系统</param>
         public static void Add(SystemType type, EventSystem system)
         {
-            if (!SystemPool.ContainsKey(type))
+            if (!isInPool(type))
             {
                 SystemPool[type] = system;
             }
@@ -92,7 +106,7 @@ namespace cvTest.Event
         {
             if (GetSubSystem(type) != null)
             {
-                GetSubSystem(type).invoke(key);
+                GetSubSystem(type).invoke(key,type);
             }
         }
     }
