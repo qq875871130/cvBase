@@ -48,7 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="cvBase.cs" />
-    <Compile Include="DS\List.cs" />
+    <Compile Include="DS\List\BList.cs" />
+    <Compile Include="DS\List\List.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Type\cvType.cs" />
   </ItemGroup>

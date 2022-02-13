@@ -165,6 +165,11 @@ namespace cvTest.IO
                         //执行项目指令
                         EventCenter.invoke(cmd.Type, cmd.Key);
                     }
+                    else
+                    {
+                        //抛出溢出异常
+                        throw new Exception();
+                    }
                 }
                 catch (Exception)
                 {

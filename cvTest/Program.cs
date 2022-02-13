@@ -37,7 +37,7 @@ namespace cvTest
             //ListAll<string>(linkList);
         }
 
-        public static void ListAll<T>(LinkList<T>.Double linkList)
+        public static void ListAll<T>(List.LinkList<T>.Double linkList)
         {
             Console.WriteLine(linkList.Length);
             T[] list = linkList.ToArray();

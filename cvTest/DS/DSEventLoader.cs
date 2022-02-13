@@ -11,6 +11,7 @@ namespace cvTest.DS
 {
     public class DSEventLoader
     {
+
         public DSEventLoader()
         {
             new ListEventSystem();
@@ -18,8 +19,20 @@ namespace cvTest.DS
 
         public class ListEventSystem : DSBEventSystem
         {
+            //表操作类
+            public static class mList
+            {
+                public static class LinkedList
+                {
+                    //单链表
+                    public static List.LinkList<string>.Single slinkedList = new();
+                    //双链表
+                    public static List.LinkList<string>.Double dlinkedList = new();
+                }
+            }
             public ListEventSystem() : base(EventCenter.SystemType.list)
             {
+
             }
             private void debug(CmdItem sender)
             {
@@ -31,36 +44,97 @@ namespace cvTest.DS
             }
             protected override void Add(CmdItem sender)
             {
-                debug(sender);
+                BList<string> list;
+                switch (CmdEventLoader.MenuEventSystem.RootCurrent.Key)
+                {
+                    case "list_linked_single":
+                        list = mList.LinkedList.slinkedList;
+                        break;
+                    case "list_linked_double":
+                        list = mList.LinkedList.dlinkedList;
+                        break;
+                    default:
+                        debug(sender);
+                        break;
+                }
+
+
+
                 base.Add(sender);
             }
+           
             protected override void Check(CmdItem sender)
             {
-                debug(sender);
+                switch (CmdEventLoader.MenuEventSystem.RootCurrent.Key)
+                {
+                    case "list_linked_single":
+                        break;
+                    case "list_linked_double":
+                        break;
+                    default:
+                        debug(sender);
+                        break;
+                }
                 base.Check(sender);
             }
 
             protected override void Get(CmdItem sender)
             {
-                debug(sender);
+                switch (CmdEventLoader.MenuEventSystem.RootCurrent.Key)
+                {
+                    case "list_linked_single":
+                        break;
+                    case "list_linked_double":
+                        break;
+                    default:
+                        debug(sender);
+                        break;
+                }
                 base.Get(sender);
             }
 
             protected override void Delete(CmdItem sender)
             {
-                debug(sender);
+                switch (CmdEventLoader.MenuEventSystem.RootCurrent.Key)
+                {
+                    case "list_linked_single":
+                        break;
+                    case "list_linked_double":
+                        break;
+                    default:
+                        debug(sender);
+                        break;
+                }
                 base.Delete(sender);
             }
 
             protected override void Search(CmdItem sender)
             {
-                debug(sender);
+                switch (CmdEventLoader.MenuEventSystem.RootCurrent.Key)
+                {
+                    case "list_linked_single":
+                        break;
+                    case "list_linked_double":
+                        break;
+                    default:
+                        debug(sender);
+                        break;
+                }
                 base.Search(sender);
             }
 
             protected override void Clear(CmdItem sender)
             {
-                debug(sender);
+                switch (CmdEventLoader.MenuEventSystem.RootCurrent.Key)
+                {
+                    case "list_linked_single":
+                        break;
+                    case "list_linked_double":
+                        break;
+                    default:
+                        debug(sender);
+                        break;
+                }
                 base.Clear(sender);
             }
         }
