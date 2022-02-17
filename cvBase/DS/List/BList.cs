@@ -10,13 +10,13 @@ namespace cvBase.DS
     /// 表结构基类
     /// </summary>
     /// <typeparam name="T">数据泛型</typeparam>
-     public class BList<T>
+    public class BList<T>
     {
         /// <summary>
         /// 插入结点函数
         /// </summary>
         /// <param name="data">插入数据</param>
-         public virtual void Add(T data) { }
+        public virtual void Add(T data) { }
         /// <summary>
         /// 插入结点函数
         /// </summary>
@@ -28,7 +28,19 @@ namespace cvBase.DS
         /// </summary>
         /// <param name="data">插入数据</param>
         /// <param name="pos">插入位置</param>
-        public virtual void Add(int pos, T data) { }
+        public virtual void Add(T data, int pos) { }
+        /// <summary>
+        /// 在特定位置的插入函数
+        /// </summary>
+        /// <param name="data">插入数据</param>
+        /// <param name="index">插入位置索引</param>
+        /// <param name="type">插入方向
+        /// <para>
+        /// 位置前插
+        /// 位置后插
+        /// </para>
+        /// </param>
+        public virtual void Add(T data, int index, List.AddType type) { }
         /// <summary>
         /// 获取结点
         /// </summary>
@@ -52,7 +64,7 @@ namespace cvBase.DS
         /// </summary>
         /// <param name="data">待匹配数据</param>
         /// <returns>匹配数据首个索引</returns>
-        public virtual int GetIndex(T data){ return default; }
+        public virtual int GetIndex(T data) { return default; }
         /// <summary>
         /// 获取匹配数据的索引集
         /// </summary>
@@ -105,8 +117,16 @@ namespace cvBase.DS
         {
             return default;
         }
-
-
+        /// <summary>
+        /// 判断方法是否重写
+        /// </summary>
+        /// <param name="methodName">方法名称</param>
+        /// <param name="paramArray">参数数组</param>
+        /// <returns>是否重写</returns>
+        public bool IsOverride(string methodName, System.Type[] paramArray)
+        {
+            return !(GetType().GetMethod(methodName, paramArray).DeclaringType.Equals(typeof(BList<T>)));
+        }
 
     }
 }

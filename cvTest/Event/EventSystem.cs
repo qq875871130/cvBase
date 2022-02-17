@@ -10,6 +10,9 @@ namespace cvTest.Event
 {
     //委托定义项
     public delegate void Method(CmdItem sender);
+    public delegate void Method<T>(T param);
+    public delegate void Method<T, K>(T param1, K param2);
+    public delegate void Method<T, K, V>(T param1, K param2, V param3);
     /// <summary>
     /// 消息事件系统
     /// <para>存放以键索引的委托链集合，以实现简单的消息机制</para>
@@ -77,14 +80,22 @@ namespace cvTest.Event
         /// 响应消息
         /// </summary>
         /// <param name="key">键</param>
-        public void invoke(string key,EventCenter.SystemType type)
+        public void invoke(string key, EventCenter.SystemType type)
         {
             if (isInPool(key))
             {
-                //执行委托链
-                Method e = EventPool[key] as Method;
-                CmdItem sender = EventCenter.GetRoot().GetItem(key, type);
-                e(sender);
+                try
+                {
+                    //执行委托链
+                    Method e = EventPool[key] as Method;
+                    CmdItem sender = EventCenter.GetRoot().GetItem(key, type);
+                    e(sender);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
             }
         }
     }

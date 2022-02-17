@@ -156,6 +156,7 @@ namespace cvTest.IO
             {
                 try
                 {
+                    Console.CancelKeyPress += Console_CancelKeyPress;
                     //转化输入为数字指令
                     int cmdNum = Convert.ToInt32(Console.ReadLine());
                     //在当前菜单集中寻访项目
@@ -168,16 +169,23 @@ namespace cvTest.IO
                     else
                     {
                         //抛出溢出异常
-                        throw new Exception();
+                        throw new ArgumentOutOfRangeException();
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    //输入格式为非数字时，提示错误并要求重新输入
-                    CmdLine.Write("输入有误，请重试", CmdLine.WriteState.no_clear);
+                    //检测异常，刷新菜单、提示错误并要求重新输入
+                    RefreshMenu(sender);
+                    CmdLine.Write(e.Message, CmdLine.WriteState.no_clear, true);
+                    CmdLine.Write("请重试", CmdLine.WriteState.no_clear, true);
                     ReadCmd(sender);
                     throw;
                 }
+            }
+
+            private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
+            {
+                e.Cancel = true;
             }
             #endregion
         }

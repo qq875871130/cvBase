@@ -34,7 +34,7 @@ namespace cvBase.DS
             /// <summary>
             /// 单链表
             /// </summary>
-            public class Single:BList<T>
+            public class Single : BList<T>
             {
                 /// <summary>
                 /// 单指针结点
@@ -143,7 +143,7 @@ namespace cvBase.DS
                 /// </summary>
                 /// <param name="data">插入数据</param>
                 /// <param name="pos">插入位置</param>
-                public override void Add(int pos, T data)
+                public override void Add(T data, int pos)
                 {
                     Node p = Head;
                     Node node;
@@ -329,11 +329,11 @@ namespace cvBase.DS
             }
             #endregion
             #region 双向链表
-            /// 双向链表类
             /// <summary>
+            /// 双向链表
             /// <para>next与prev构成的双指针域链表</para>
             /// </summary>
-            public class Double:BList<T>
+            public class Double : BList<T>
             {
                 /// <summary>
                 /// 双链结点类
@@ -466,7 +466,7 @@ namespace cvBase.DS
                 /// 位置后插
                 /// </para>
                 /// </param>
-                public void Add(T data, int index, AddType type)
+                public override void Add(T data, int index, AddType type)
                 {
                     Node node;
                     //表长异常检测
@@ -529,7 +529,14 @@ namespace cvBase.DS
                 /// <returns></returns>
                 public override T GetData(int index)
                 {
-                    return GetDNode(index).Data;
+                    try
+                    {
+                        return GetDNode(index).Data;
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
                 }
                 /// <summary>
                 /// 以数据查找最近索引值

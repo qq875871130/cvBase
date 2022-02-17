@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using cvTest.IO;
 using cvTest.Event;
+using cvTest.Templates;
 
 namespace cvTest.DS
 {
@@ -45,6 +46,7 @@ namespace cvTest.DS
             add,
             delete
         }
+        protected virtual bool isDSExist() { return false; }
         private static CmdItem InitCmd(CmdItem root)
         {
             CmdItem Root = root;
@@ -64,32 +66,50 @@ namespace cvTest.DS
 
         protected virtual void Check(CmdItem sender)
         {
-
+            if (!isDSExist())
+            {
+                throw new MyExceptions.NoCompatibleDSException();
+            }
         }
 
         protected virtual void Get(CmdItem sender)
         {
-
+            if (!isDSExist())
+            {
+                throw new MyExceptions.NoCompatibleDSException();
+            }
         }
 
         protected virtual void Clear(CmdItem sender)
         {
-
+            if (!isDSExist())
+            {
+                throw new MyExceptions.NoCompatibleDSException();
+            }
         }
 
         protected virtual void Search(CmdItem sender)
         {
-
+            if (!isDSExist())
+            {
+                throw new MyExceptions.NoCompatibleDSException();
+            }
         }
 
         protected virtual void Add(CmdItem sender)
         {
-
+            if (!isDSExist())
+            {
+                throw new MyExceptions.NoCompatibleDSException();
+            }
         }
 
         protected virtual void Delete(CmdItem sender)
         {
-
+            if (!isDSExist())
+            {
+                throw new MyExceptions.NoCompatibleDSException();
+            }
         }
 
     }
