@@ -13,14 +13,5 @@ namespace cvTest
             cmdProcessor.Start();
         }
 
-        public static void ListAll<T>(List.LinkList<T>.Double linkList)
-        {
-            Console.WriteLine(linkList.Length);
-            T[] list = linkList.ToArray();
-            for (int i = 0; i < list.Length; i++)
-            {
-                Console.WriteLine(i + 1 + "\t" + list[i]);
-            }
-        }
     }
 }
