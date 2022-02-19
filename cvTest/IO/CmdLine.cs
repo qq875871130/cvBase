@@ -108,7 +108,8 @@ namespace cvTest.IO
         /// <typeparam name="T">用户输入数据类型</typeparam>
         /// <param name="description">输入前提示消息</param>
         /// <param name="method">接受每次输入的委托方法</param>
-        public static void ReadStream<T>(string description, Method<T> method, WriteState writeState)
+        /// <returns>输入次数</returns>
+        public static int ReadStream<T>(string description, Method<T> method, WriteState writeState)
         {
             int count = Read<int>(description, writeState, false);
             for (int i = 1; i <= count; i++)
@@ -116,6 +117,7 @@ namespace cvTest.IO
                 Write("输入第" + i + "个数据：", WriteState.no_clear, false);
                 method(Read<T>());
             }
+            return count;
         }
         /// <summary>
         /// 多参数流式输入
@@ -126,7 +128,8 @@ namespace cvTest.IO
         /// <param name="method">委托方法</param>
         /// <param name="extraParam">额外参数</param>
         /// <param name="writeState">消息输出方式</param>
-        public static void ReadStream<T, K>(string description, Method<T, K> method, K extraParam, WriteState writeState)
+        /// <returns>输入次数</returns>
+        public static int ReadStream<T, K>(string description, Method<T, K> method, K extraParam, WriteState writeState)
         {
             int count = Read<int>(description, writeState, false);
             for (int i = 1; i <= count; i++)
@@ -134,6 +137,7 @@ namespace cvTest.IO
                 Write("输入第" + i + "个数据：", WriteState.no_clear, false);
                 method(Read<T>(), extraParam);
             }
+            return count;
         }
         /// <summary>
         /// 多参数流式输入
@@ -146,7 +150,8 @@ namespace cvTest.IO
         /// <param name="extraParam1">额外参数1</param>
         /// <param name="extraParam2">额外参数2</param>
         /// <param name="writeState">消息输出方式</param>
-        public static void ReadStream<T, K, V>(string description, Method<T, K, V> method, K extraParam1, V extraParam2, WriteState writeState)
+        /// <returns>输入次数</returns>
+        public static int ReadStream<T, K, V>(string description, Method<T, K, V> method, K extraParam1, V extraParam2, WriteState writeState)
         {
             int count = Read<int>(description, writeState, false);
             for (int i = 1; i <= count; i++)
@@ -154,6 +159,7 @@ namespace cvTest.IO
                 Write("输入第" + i + "个数据：", WriteState.no_clear, false);
                 method(Read<T>(), extraParam1, extraParam2);
             }
+            return count;
         }
         /// <summary>
         ///输出格式化类

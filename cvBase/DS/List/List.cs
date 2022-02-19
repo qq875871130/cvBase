@@ -241,22 +241,25 @@ namespace cvBase.DS
                     List<int> indList = indexes.ToList();
                     indList.Sort();
                     int[] indexes_sorted = indList.ToArray();
-                    int i = 0, j = 0;
+                    int i = 1, j = 0;
                     if (p.Next == null)
                     {
-                        return;
+                        throw new Exception("结构为空！");
                     }
-                    while (p.Next.Next != null)
+                    do
                     {
-                        p = p.Next;
-                        i++;
-                        if (j < indexes_sorted.Length && i + 1 == indexes_sorted[j])
+                        if (j < indexes_sorted.Length && i == indexes_sorted[j])
                         {
                             p.Next = p.Next.Next;
                             j++;
                             Length--;
                         }
-                    }
+                        else
+                        {
+                            p = p.Next;
+                        }
+                        i++;
+                    } while (p.Next != null);
                 }
                 /// <summary>
                 /// 删除结点
